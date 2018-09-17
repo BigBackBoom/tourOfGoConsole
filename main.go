@@ -2,39 +2,26 @@ package main
 
 import (
 	"log"
-	"github.com/jroimartin/gocui"
-	"fmt"
+	"tourOfGoConsole/tofgo"
 )
 
 func main() {
-	g, err := gocui.NewGui(gocui.OutputNormal)
+
+	t := tofgo.TourOfGo{}
+	err := t.InitTofGo()
+
 	if err != nil {
 		log.Panicln(err)
 	}
-	defer g.Close()
+	defer t.Close()
 
-	g.SetManagerFunc(layout)
+	t.CrtLayout()
 
-	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
+	if err := t.SetKeyBnd(); err != nil {
 		log.Panicln(err)
 	}
 
-	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
+	if err := t.Run(); err != nil {
 		log.Panicln(err)
 	}
-}
-
-func layout(g *gocui.Gui) error {
-	maxX, maxY := g.Size()
-	if v, err := g.SetView("hello", maxX/2-7, maxY/2, maxX/2+7, maxY/2+2); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		fmt.Fprintln(v, "Hello world!")
-	}
-	return nil
-}
-
-func quit(g *gocui.Gui, v *gocui.View) error {
-	return gocui.ErrQuit
 }
