@@ -1,27 +1,27 @@
 package main
 
 import (
+	"github.com/jroimartin/gocui"
 	"log"
-	"tourOfGoConsole/tofgo"
 )
 
 func main() {
+	gocui.NewGui(gocui.OutputNormal)
 
-	t := tofgo.TourOfGo{}
-	err := t.InitTofGo()
+	r := NewInteractor()
+
+	g, err := r.CreateTourOfGo()
 
 	if err != nil {
 		log.Panicln(err)
 	}
-	defer t.Close()
 
-	t.CrtLayout()
-
-	if err := t.SetKeyBnd(); err != nil {
+	if err := g.InitTofGo(); err != nil {
 		log.Panicln(err)
 	}
+	defer g.Close()
 
-	if err := t.Run(); err != nil {
+	if err := g.Run(); err != nil {
 		log.Panicln(err)
 	}
 }

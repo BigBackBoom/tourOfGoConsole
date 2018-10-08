@@ -3,42 +3,57 @@ package tofgo
 import (
 	"fmt"
 	"github.com/jroimartin/gocui"
+	"log"
 )
 
-type TourOfGo struct {
+type tourOfGo struct {
 	gui *gocui.Gui
 }
 
-func (t *TourOfGo) InitTofGo() error {
+type TourOfGo interface {
+	InitTofGo() error
+	Run() error
+	Close()
+}
 
-	var err error
-	t.gui, err = gocui.NewGui(gocui.Output256)
-
+func CreateTourOfGo() (TourOfGo, error) {
+	gui, err := gocui.NewGui(gocui.Output256)
 	if err != nil {
+		return nil, err
+	}
+	return &tourOfGo{gui}, nil
+}
+
+func (t *tourOfGo) InitTofGo() error {
+
+	t.crtLayout()
+
+	if err := t.setKeyBnd(); err != nil {
+		log.Panicln(err)
 		return err
 	}
 	return nil
 }
 
-func (t *TourOfGo) CrtLayout() {
+func (t *tourOfGo) crtLayout() {
 	t.gui.SetManagerFunc(layout)
 }
 
-func (t *TourOfGo) SetKeyBnd() error {
+func (t *tourOfGo) setKeyBnd() error {
 	if err := t.gui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (t *TourOfGo) Run() error {
+func (t *tourOfGo) Run() error {
 	if err := t.gui.MainLoop(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (t *TourOfGo) Close() {
+func (t *tourOfGo) Close() {
 	t.gui.Close()
 }
 
