@@ -4,17 +4,17 @@ import (
 	"tourOfGoConsole/tofgo"
 )
 
-type interactor struct {
+type injector struct {
 }
 
-type Iteractor interface {
+type Injector interface {
 	CreateTourOfGo() (tofgo.TourOfGo, error)
 }
 
-func NewInteractor() Iteractor {
-	return &interactor{}
+func NewInjector() Injector {
+	return &injector{}
 }
 
-func (i *interactor) CreateTourOfGo() (tofgo.TourOfGo, error) {
+func (i *injector) CreateTourOfGo() (tofgo.TourOfGo, error) {
 	return tofgo.CreateTourOfGo()
 }

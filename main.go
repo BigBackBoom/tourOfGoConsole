@@ -8,7 +8,7 @@ import (
 func main() {
 	gocui.NewGui(gocui.OutputNormal)
 
-	r := NewInteractor()
+	r := NewInjector()
 
 	g, err := r.CreateTourOfGo()
 
