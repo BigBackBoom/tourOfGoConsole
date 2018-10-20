@@ -1,13 +1,15 @@
 package tofgo
 
 import (
-	"fmt"
 	"github.com/jroimartin/gocui"
 	"log"
+	"tourOfGoConsole/tofgo/ui"
+	"tourOfGoConsole/tofgo/ui/guidance_view"
 )
 
 type tourOfGo struct {
-	gui *gocui.Gui
+	gui          *gocui.Gui
+	guidanceView ui.View
 }
 
 type TourOfGo interface {
@@ -16,12 +18,11 @@ type TourOfGo interface {
 	Close()
 }
 
-func CreateTourOfGo() (TourOfGo, error) {
-	gui, err := gocui.NewGui(gocui.Output256)
-	if err != nil {
-		return nil, err
+func CreateTourOfGo(g *gocui.Gui, gv ui.View) TourOfGo {
+	return &tourOfGo{
+		g,
+		gv,
 	}
-	return &tourOfGo{gui}, nil
 }
 
 func (t *tourOfGo) InitTofGo() error {
@@ -40,9 +41,7 @@ func (t *tourOfGo) crtLayout() {
 }
 
 func (t *tourOfGo) setKeyBnd() error {
-	if err := t.gui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
-		return err
-	}
+	t.guidanceView.InitKeyBindings()
 	return nil
 }
 
@@ -58,16 +57,6 @@ func (t *tourOfGo) Close() {
 }
 
 func layout(g *gocui.Gui) error {
-	maxX, maxY := g.Size()
-	if v, err := g.SetView("hello", maxX/2-7, maxY/2, maxX/2+7, maxY/2+2); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		fmt.Fprintln(v, "Hello world!")
-	}
+	guidance_view.Layout(g)
 	return nil
-}
-
-func quit(g *gocui.Gui, v *gocui.View) error {
-	return gocui.ErrQuit
 }

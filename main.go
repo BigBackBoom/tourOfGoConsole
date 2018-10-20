@@ -3,12 +3,13 @@ package main
 import (
 	"github.com/jroimartin/gocui"
 	"log"
+	"tourOfGoConsole/tofgo"
 )
 
 func main() {
 	gocui.NewGui(gocui.OutputNormal)
 
-	r := NewInjector()
+	r := tofgo.NewInjector()
 
 	g, err := r.CreateTourOfGo()
 
